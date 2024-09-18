@@ -26,7 +26,21 @@ Now, you need to clone your fork of the KomaMRI repository. In Julia, you can do
 (@v1.10) pkg> dev https://github.com/<github-username>/KomaMRI.jl
 ```
 
-This saves the local Git project at the `~/.julia/dev/KomaMRI/` directory. You can then open VSCode and navigate to this folder; it should look like this:
+This saves the local Git project at the `~/.julia/dev/KomaMRI/` directory. You may get an error regarding unsatisfiable requirements, due to the naming of the development verion of KomaMRI packages (e.g. 0.9.0-DEV). You can ignore the error for now, instructions on how to correctly set up the Julia environment are below.
+
+If you have configured your GitHub account to keep your email address private, make sure, you use your private GitHub email (`<github-username>@users.noreply.github.com`) in your local Git repository. Otherwise GitHub will not allow you to push your local commits to GitHub. To check the current setting for your email:
+
+```bash
+user@machine:~/.julia/dev/KomaMRI$ git config user.email
+```
+
+You can modify the setting in the following way (make sure to replace `<github-username>` with your GitHub username):
+
+```bash
+user@machine:~/.julia/dev/KomaMRI$ git config user.email <github-username>@users.noreply.github.com
+```
+
+You can then open VSCode and navigate to this folder; it should look like this:
 
 ![](../assets/dev-vscode-git-project.png)
 
