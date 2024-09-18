@@ -76,7 +76,7 @@ First, create a branch with a descriptive name. For example, you can use `patch-
 ![](../assets/dev-branch.png)
 ![](../assets/dev-branch-name.png)
 
-In this new branch, we are going to edit the `setup_phantom` function located in the file `src/ui/ExportUIFunctions.jl`. Specifically, we will replace the line where a brain phantom is defined with the function `pelvis_brain2D`:
+In this new branch, we are going to edit the `setup_phantom` function located in the file `src/ui/ExportUIFunctions.jl`. Specifically, we will replace the line where a brain phantom is defined with the function `pelvis_phantom2D`:
 
 ![](../assets/dev-branch-edit.png)
 
