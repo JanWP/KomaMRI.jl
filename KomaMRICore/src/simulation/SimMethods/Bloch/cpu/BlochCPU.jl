@@ -22,7 +22,7 @@ Base.view(p::BlochCPUPrealloc, i::UnitRange) = begin
 end
 
 """Preallocates arrays for use in run_spin_precession! and run_spin_excitation!."""
-function prealloc(sim_method::Bloch, backend::KA.CPU, obj::Phantom{T}, M::Mag{T}, max_block_length::Integer, precalc) where {T<:Real}
+function prealloc(sim_method::Bloch, backend::KA.CPU, obj::Phantom{T}, M::Mag{T}, max_block_length::Integer, groupsize) where {T<:Real}
     return BlochCPUPrealloc(
         Mag(
             similar(M.xy),
@@ -54,6 +54,7 @@ function run_spin_precession!(
     sig::AbstractArray{Complex{T}},
     M::Mag{T},
     sim_method::Bloch,
+    groupsize,
     backend::KA.CPU,
     prealloc::BlochCPUPrealloc
 ) where {T<:Real}
@@ -124,6 +125,7 @@ function run_spin_excitation!(
     sig::AbstractArray{Complex{T}},
     M::Mag{T},
     sim_method::Bloch,
+    groupsize,
     backend::KA.CPU,
     prealloc::BlochCPUPrealloc
 ) where {T<:Real}
