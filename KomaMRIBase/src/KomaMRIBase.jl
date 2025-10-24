@@ -51,6 +51,7 @@ export kfoldperm, trapz, cumtrapz
 export brain_phantom2D, brain_phantom3D, pelvis_phantom2D, heart_phantom
 # Motion
 export MotionList, NoMotion, Motion
+export translate, rotate, heartbeat, path, flowpath
 export Translate, TranslateX, TranslateY, TranslateZ
 export Rotate, RotateX, RotateY, RotateZ 
 export HeartBeat, Path, FlowPath
@@ -60,9 +61,9 @@ export get_spin_coords
 # Secondary
 export get_kspace, rotx, roty, rotz
 # Additionals
-export get_flip_angles, is_RF_on, is_GR_on, is_ADC_on, get_label
+export get_flip_angles, is_RF_on, is_GR_on, is_ADC_on
 # Sequence related
-export get_Mk, get_kspace, get_M0, get_M1, get_M2
+export get_Mk, get_kspace, get_M0, get_M1, get_M2, get_label
 
 # PulseDesigner submodule
 include("sequences/PulseDesigner.jl")

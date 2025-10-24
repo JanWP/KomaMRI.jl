@@ -410,7 +410,8 @@ function simulate(
         w,
     )
     # Result to CPU, if already in the CPU it does nothing
-    sig = sum(sig; dims=length(Ndims) + 1) |> cpu #Sum over threads
+    sig = sig |> cpu
+    sig = sum(sig; dims=length(Ndims) + 1) #Sum over threads, no-op for gpu (Nthreads=1)
     sig .*= get_adc_phase_compensation(seq)
     Xt = Xt |> cpu
     # Output
@@ -459,7 +460,7 @@ function simulate_slice_profile(
 )
     sim_params["return_type"] = "state"
     sys = Scanner()
-    obj = Phantom{Float64}(; x=zeros(size(z)), z=Array(z))
+    obj = Phantom(; x=zeros(size(z)), z=Array(z))
     mag = simulate(obj, seq, sys; sim_params)
     return mag
 end

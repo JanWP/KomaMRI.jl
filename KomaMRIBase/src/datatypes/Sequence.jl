@@ -29,7 +29,7 @@ mutable struct Sequence
 	GR::Array{Grad,2}		  #Sequence in (X, Y and Z) and time
 	RF::Array{RF,2}			  #RF pulses in coil and time
 	ADC::Array{ADC,1}		  #ADC in time
-	DUR::Vector				  #Duration of each block, this enables delays after RF pulses to satisfy ring-down times
+	DUR::Array{Float64,1}				  #Duration of each block, this enables delays after RF pulses to satisfy ring-down times
 	EXT::Vector{Vector{Extension}}
 	DEF::Dict{String,Any} 	  #Dictionary with information relevant to the reconstructor
 	Sequence(GR, RF, ADC, DUR, EXT, DEF) = begin
@@ -122,9 +122,6 @@ Base.lastindex(x::Sequence) = length(x.DUR)
 Base.copy(x::Sequence) where Sequence = Sequence([deepcopy(getfield(x, k)) for k ∈ fieldnames(Sequence)]...)
 
 #Arithmetic operations
-recursive_merge(x::Dict{K, V}) where {K, V} = merge(recursive_merge, x...)
-recursive_merge(x::Vector) = cat(x...; dims=1)
-recursive_merge(x...) = x[end]
 +(x::Sequence, y::Sequence) = Sequence(hcat(x.GR,  y.GR), hcat(x.RF, y.RF), vcat(x.ADC, y.ADC), vcat(x.DUR, y.DUR), vcat(x.EXT,y.EXT),merge(x.DEF, y.DEF))
 -(x::Sequence, y::Sequence) = Sequence(hcat(x.GR, -y.GR), hcat(x.RF, y.RF), vcat(x.ADC, y.ADC), vcat(x.DUR, y.DUR), vcat(x.EXT,y.EXT),merge(x.DEF, y.DEF))
 -(x::Sequence) = Sequence(-x.GR, x.RF, x.ADC, x.DUR, x.EXT,x.DEF)

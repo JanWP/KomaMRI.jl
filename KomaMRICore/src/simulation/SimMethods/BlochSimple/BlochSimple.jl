@@ -52,7 +52,7 @@ function run_spin_precession!(
     outflow_spin_reset!(Mxy, seq.t', p.motion)
     outflow_spin_reset!(M, seq.t', p.motion; replace_by=p.ρ)
     #Acquired signal
-    sig .= transpose(sum(Mxy[:, findall(seq.ADC)]; dims=1)) #<--- TODO: add coil sensitivities
+    sig .= @views transpose(sum(Mxy[:, findall(seq.ADC)]; dims=1)) #<--- TODO: add coil sensitivities
     return nothing
 end
 
@@ -90,7 +90,7 @@ function run_spin_excitation!(
         Bz = (s.Gx .* x .+ s.Gy .* y .+ s.Gz .* z) .+ ΔBz
         B1 = s.B1 .* p.B1 # Take B1+ transmit RF field map into account. This is complex
         B = sqrt.(abs.(B1) .^ 2 .+ abs.(Bz) .^ 2)
-        B[B .== 0] .= eps(T)
+        B .+= (B .== 0) .* eps(T)
         #Spinor Rotation
         φ = T(-2π .* γ) .* (B .* s.Δt) # TODO: Use trapezoidal integration here (?),  this is just Forward Euler
         mul!(Q(φ, B1 ./ B, Bz ./ B), M)

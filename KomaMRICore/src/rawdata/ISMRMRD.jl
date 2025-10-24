@@ -92,8 +92,9 @@ function signal_to_raw_data(
         FOVx, FOVy, _ = seq.DEF["FOV"] #[m]
         if FOVx > 1 FOVx *= 1e-3 end #mm to m, older versions of Pulseq saved FOV in mm
         if FOVy > 1 FOVy *= 1e-3 end #mm to m, older versions of Pulseq saved FOV in mm
-        Nx = round(Int64, FOVx / Δx[1]) + 1
-        Ny = round(Int64, FOVy / Δx[2]) + 1
+        #Should this be "round(Int64, FOVx /  Δx[1]) + 1" (and simimlar for FOVy)?
+        Nx = isnothing(get(seq.DEF, "Nx", nothing)) ? ceil(Int64, FOVx / Δx[1]) : Nx
+        Ny = isnothing(get(seq.DEF, "Ny", nothing)) ? ceil(Int64, FOVy / Δx[2]) : Ny
     else
         FOVx = Nx * Δx[1]
         FOVy = Ny * Δx[2]
@@ -180,7 +181,9 @@ function signal_to_raw_data(
             #Acquired data, data::Array{Complex{Float32},2}, 1dim=numsamples, 2dim=coils
             dat =  signal[current:current+Nsamples-1, :]
             #Find the center of the readout
-            idx_center = findfirst(x -> x > 0,traj[1,:]) - 1 # might not work for some complex trajectories
+
+            idx_center = findfirst(x -> x > 0,traj[1,:])
+            idx_center = isnothing(idx_center) || idx_center == 0 ? 0 : idx_center - 1 # might not work for some complex trajectories
             #Header of profile data, head::AcquisitionHeader
             head = AcquisitionHeader(
                 UInt16(1), #version uint16: First unsigned int indicates the version
@@ -224,7 +227,7 @@ function signal_to_raw_data(
             #Update counters
             scan_counter += 1
             current += Nsamples
-            if scan_counter % NadcsPerImage == 0 #For now only   is considered
+            if scan_counter % NadcsPerImage == 0 #For now only Nz is considered
                 nz += 1 #another image
                 scan_counter = 0 #reset counter
             end
