@@ -443,7 +443,7 @@ function read_seq(filename)
                     if startswith(extension, "TRIGGERS")
                         id = parse(Int, extension[9:end])
                         extensionType[id] = Dict("data"=>"TRIGGERS")
-                        triggerLibrary = read_events(io, [1, 1, 1e-6, 1e-6]; eventLibrary = triggerLibrary)
+                        triggerLibrary = read_events(io, [1 1 1e-6 1e-6]; eventLibrary = triggerLibrary)
                     elseif startswith(extension, "LABELSET")
                         id = parse(Int, extension[9:end])
                         extensionType[id] = Dict("data"=>"LABELSET")
@@ -534,9 +534,9 @@ function read_seq(filename)
     seq.DEF["PulseqVersion"] = pulseq_version
     seq.DEF["signature"] = signature
     # Guessing recon dimensions
-    seq.DEF["Nx"] = get(seq.DEF, "Nx", maximum(adc.N for adc = seq.ADC))
-    seq.DEF["Nz"] = get(seq.DEF, "Nz", length(unique(seq.RF.Δf)))
-    seq.DEF["Ny"] = get(seq.DEF, "Ny", sum(map(is_ADC_on, seq)) ÷ seq.DEF["Nz"])
+    seq.DEF["Nx"] = trunc(Int64, get(seq.DEF, "Nx", maximum(adc.N for adc = seq.ADC)))
+    seq.DEF["Nz"] = trunc(Int64, get(seq.DEF, "Nz", length(unique(seq.RF.Δf))))
+    seq.DEF["Ny"] = trunc(Int64, get(seq.DEF, "Ny", sum(map(is_ADC_on, seq)) ÷ seq.DEF["Nz"]))
     #Koma sequence
     return seq
 end
